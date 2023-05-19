@@ -1,4 +1,6 @@
+#19_05_2023
 
+"Substitution table"
 S_TABLE = [
             [(0, 0, 1, 1), (0, 0, 0, 0), (1, 0, 1, 1), (0, 1, 0, 1)],
             [(1, 0, 0, 0), (0, 1, 0, 0), (0, 1, 1, 1), (0, 0, 1, 0)],
@@ -6,11 +8,12 @@ S_TABLE = [
             [(1, 1, 1, 1), (0, 0, 0, 1), (1, 0, 1, 0), (1, 1, 0, 1)]
         ]
             
-
+"dict for better access to substitution table"
 IDXS = {(0, 0): 0, (0, 1): 1, (1, 0): 2, (1, 1): 3}
  
 
 def s_box(bit_stream: list[int]) -> list[int]:
+    "s_box algorithm"
     if len(bit_stream)%4 != 0: bit_stream += [0] * (4 - len(bit_stream)%4)
     l = len(bit_stream)
     p = 0
@@ -21,13 +24,16 @@ def s_box(bit_stream: list[int]) -> list[int]:
 
 
 def reverse_s_box(bit_stream: list[int]) -> list[int]:
+    "backward IDXS list"
     backward = {value: key for key, value in IDXS.items()}
     
+    "reverse substitution table"
     reverse_table = {}
     for row_idx, row in enumerate(S_TABLE):
         for col_idx, entry in enumerate(row):
             reverse_table[entry] = (row_idx, col_idx)
     
+    "reverse algorithm"
     res = []
     reversed_stream = [reverse_table[tuple(bit_stream[i:i+4])] for i in range(0, len(bit_stream), 4)]
     for i in reversed_stream:
@@ -47,6 +53,12 @@ if __name__ == "__main__":
     print("Retransformation: ", b)
 
     print(a == b)
+
+    inp = list(map(int, input("Enter array of length 8 consisting of 1 or 0 and press Enter: ").split()))
+    inp_cipher = s_box(inp)
+    print("Encoded input: ", inp_cipher)
+    print("Decoded input: ", reverse_s_box(inp_cipher))
+
 
 
     
